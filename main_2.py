@@ -11,11 +11,11 @@ import tempfile
 import pandas as pd
 
 # ---------- Constants ----------
-FACE_DB_JSON = "face_db.json"
-FACE_NAMES_JSON = "face_names.json"   # NEW: persistent id->name mapping
-LOG_CSV = "face_log.csv"
+FACE_DB_JSON = os.path.join("ID_log", "face_db.json")
+FACE_NAMES_JSON = os.path.join("ID_log", "face_names.json") # persistent id->name mapping
+LOG_CSV = os.path.join("ID_log", "face_log.csv")
 
-# ---------- FAISS (optional) ----------
+# ---------- FAISS ----------
 try:
     import faiss
     FAISS_AVAILABLE = True
@@ -43,7 +43,7 @@ def _merge_segments(segments, max_gap_frames):
 # ---------- Models (cached) ----------
 @st.cache_resource
 def load_models():
-    yolo_model = YOLO("yolo11s.pt")  # Ensure your model path is correct
+    yolo_model = YOLO(os.path.join("models", "yolo11s.pt")) # Ensure your model path is correct
     face_app_model = FaceAnalysis(name="buffalo_s", providers=["CPUExecutionProvider"])
     face_app_model.prepare(ctx_id=-1, det_size=(320, 320))
     return yolo_model, face_app_model

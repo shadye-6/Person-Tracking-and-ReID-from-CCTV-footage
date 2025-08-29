@@ -2,14 +2,15 @@ import json
 import numpy as np
 import csv
 from sklearn.cluster import DBSCAN
+import os
 
 # ==========================
 # Config
 # ==========================
 SIMILARITY_THRESHOLD = 0.635  # cosine similarity threshold
 MIN_SAMPLES = 2               # min embeddings to form a cluster
-OUTPUT_CSV = "face_clusters.csv"
-LOG_CSV = "face_log.csv"     # <-- your log file: FaceID,StartFrame,EndFrame,Duration
+OUTPUT_CSV = os.path.join("ID_log", "face_clusters.csv")
+LOG_CSV = os.path.join("ID_log", "face_log.csv")  # <-- your log file: FaceID,StartFrame,EndFrame,Duration
 
 def normalize_vec(v):
     """Normalize embedding to unit length (cosine similarity)."""
