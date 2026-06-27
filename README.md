@@ -1,5 +1,19 @@
 # Person Tracking and Re-Identification from CCTV Footage
 
+A computer vision pipeline for person detection, multi-object tracking, and face re-identification in CCTV footage using YOLO11, InsightFace, and FAISS.
+
+---
+
+## Demo
+
+The following animation demonstrates the complete processing pipeline, including person detection, tracking, face recognition, and identity assignment.
+
+<p align="center">
+  <img src="test_videos/output1.gif" alt="Project Demo" width="900">
+</p>
+
+---
+
 ## Overview
 
 This project implements a complete person tracking and face re-identification pipeline for CCTV footage. It combines object detection, multi-object tracking, face recognition, and persistent identity management to identify people across video frames and across multiple video sessions.
@@ -28,14 +42,14 @@ A Streamlit web application is included to simplify video processing, identity m
 
 ## Project Structure
 
-```
+```text
 Person-Tracking-and-ReID-from-CCTV-footage/
 │
 ├── ID_log/
-│   ├── face_db.json          # Persistent face embedding database
-│   ├── face_names.json       # FaceID to person name mapping
-│   ├── face_log.csv          # Detection logs
-│   └── face_clusters.csv     # Clustered identities
+│   ├── face_db.json
+│   ├── face_names.json
+│   ├── face_log.csv
+│   └── face_clusters.csv
 │
 ├── models/
 │   ├── yolo11n.pt
@@ -43,37 +57,39 @@ Person-Tracking-and-ReID-from-CCTV-footage/
 │   └── yolov8n.pt
 │
 ├── test_videos/
+│   ├── output1.gif
+│   └── ...
 │
-├── main.py                   # Standalone processing script
-├── main_2.py                 # Streamlit application
-├── cluster.py                # Face clustering utility
+├── cluster.py
+├── main.py
+├── main_2.py
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-# System Pipeline
+## System Pipeline
 
-1. Detect people using YOLO.
+1. Detect people using YOLO11.
 2. Track each detected person across frames.
-3. Crop the upper body region for face detection.
+3. Crop the upper-body region for face detection.
 4. Extract facial embeddings using InsightFace.
-5. Normalize embeddings.
+5. Normalize facial embeddings.
 6. Search the embedding against the persistent face database.
-7. Match existing identities using cosine similarity and FAISS.
+7. Match identities using FAISS and cosine similarity.
 8. Assign a new FaceID if no match is found.
 9. Store embeddings for future recognition.
-10. Generate appearance logs and annotated output video.
+10. Generate annotated output videos and appearance logs.
 
 ---
 
-# Technologies Used
+## Technologies Used
 
 | Component | Library |
 |----------|----------|
 | Object Detection | YOLO11 (Ultralytics) |
-| Tracking | YOLO Track |
+| Multi-Object Tracking | YOLO Track |
 | Face Recognition | InsightFace |
 | Similarity Search | FAISS |
 | Web Interface | Streamlit |
@@ -86,7 +102,7 @@ Person-Tracking-and-ReID-from-CCTV-footage/
 
 # Installation
 
-## 1. Clone the repository
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/<your-username>/Person-Tracking-and-ReID-from-CCTV-footage.git
@@ -96,7 +112,7 @@ cd Person-Tracking-and-ReID-from-CCTV-footage
 
 ---
 
-## 2. Create a virtual environment
+## 2. Create a Virtual Environment
 
 ### Windows
 
@@ -116,7 +132,7 @@ source venv/bin/activate
 
 ---
 
-## 3. Install dependencies
+## 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -124,9 +140,9 @@ pip install -r requirements.txt
 
 ---
 
-## 4. Requirements
+## Requirements
 
-```
+```text
 streamlit==1.36.0
 ultralytics==8.2.90
 insightface==0.7.3
@@ -145,24 +161,24 @@ tqdm==4.66.4
 **Note**
 
 - `faiss-cpu` is used by default.
-- `faiss-gpu` can be installed instead if CUDA is available.
+- `faiss-gpu` can be installed if CUDA is available for faster similarity search.
 
 ---
 
-# Model Files
+## Model Files
 
-Place the pretrained YOLO weights inside the `models/` directory.
+Place the pretrained YOLO weight files inside the `models/` directory.
 
-```
+```text
 models/
-    yolo11n.pt
-    yolo11s.pt
-    yolov8n.pt
+├── yolo11n.pt
+├── yolo11s.pt
+└── yolov8n.pt
 ```
 
-The application currently uses:
+The current implementation uses:
 
-```
+```text
 models/yolo11s.pt
 ```
 
@@ -172,27 +188,27 @@ models/yolo11s.pt
 
 ## Option 1 — Streamlit Application (Recommended)
 
-Launch the web interface:
+Launch the web application:
 
 ```bash
 streamlit run main_2.py
 ```
 
-After launching:
+Then:
 
-1. Open the provided localhost URL in your browser.
+1. Open the local URL displayed in the terminal.
 2. Upload a CCTV video.
-3. Configure processing parameters from the sidebar.
+3. Configure the processing parameters from the sidebar.
 4. Click **Start Processing**.
-5. View the annotated output video.
+5. View the processed video.
 6. Assign names to newly detected Face IDs.
-7. Download logs and databases if required.
+7. Download the generated logs and databases if required.
 
 ---
 
 ## Option 2 — Standalone Python Script
 
-Edit the input/output paths inside `main.py` if necessary:
+Modify the input and output paths in `main.py` if necessary.
 
 ```python
 INPUT_PATH = "test.mp4"
@@ -205,7 +221,7 @@ Run:
 python main.py
 ```
 
-Outputs generated:
+Outputs:
 
 - Annotated video
 - `face_db.json`
@@ -215,7 +231,7 @@ Outputs generated:
 
 ## Option 3 — Face Clustering
 
-After generating the face database and logs:
+Once the face database and logs have been generated:
 
 ```bash
 python cluster.py
@@ -223,83 +239,58 @@ python cluster.py
 
 This produces:
 
-```
+```text
 ID_log/
-    face_clusters.csv
+└── face_clusters.csv
 ```
 
-The clustering groups highly similar identities using DBSCAN and cosine similarity.
+The clustering groups visually similar identities using DBSCAN and cosine similarity.
 
 ---
 
-# Output Files
+## Output Files
 
-## face_db.json
+### face_db.json
 
 Stores normalized facial embeddings for every detected identity.
 
-Example:
+### face_names.json
 
-```json
-{
-    "0": [...],
-    "1": [...],
-    "2": [...]
-}
-```
+Stores the mapping between Face IDs and assigned names.
 
----
+### face_log.csv
 
-## face_names.json
-
-Maps Face IDs to user-assigned names.
-
-Example:
-
-```json
-{
-    "0": "Alice",
-    "1": "Bob"
-}
-```
-
----
-
-## face_log.csv
-
-Stores appearance information.
+Contains appearance information for every detected individual.
 
 | FaceID | Name | StartTime | EndTime | DurationSeconds | RunTimestamp |
-|---------|------|-----------|---------|-----------------|--------------|
+|--------|------|-----------|---------|-----------------|--------------|
 
----
+### face_clusters.csv
 
-## face_clusters.csv
-
-Groups similar identities.
+Contains grouped identities after DBSCAN clustering.
 
 | ClusterID | FaceIDs | StartFrames | EndFrames | Durations |
-|------------|----------|-------------|------------|------------|
+|-----------|----------|-------------|-----------|-----------|
 
 ---
 
-# Adjustable Parameters
+## Configurable Parameters
 
-The Streamlit application exposes several configurable parameters:
+The Streamlit interface exposes several adjustable parameters.
 
 | Parameter | Description |
-|------------|-------------|
+|-----------|-------------|
 | Similarity Threshold | Minimum cosine similarity required for identity matching |
-| Embedding Buffer Size | Maximum embeddings retained for each identity |
-| Face Detection Interval | Number of frames skipped between face detections |
+| Embedding Buffer Size | Number of embeddings retained per identity |
+| Face Detection Interval | Frames skipped between face detections |
 | Processing FPS | Frame rate used during inference |
 | Minimum Track Duration | Minimum tracking duration before assigning an identity |
 
 ---
 
-# Identity Assignment
+## Identity Assignment
 
-The application supports persistent naming of detected individuals.
+The application supports persistent identity naming.
 
 Workflow:
 
@@ -311,36 +302,36 @@ Workflow:
 
 ---
 
-# Face Matching Strategy
+## Face Matching Strategy
 
 The recognition pipeline performs:
 
 - Face embedding extraction
-- L2 normalization
+- Embedding normalization
 - FAISS nearest-neighbor search
 - Cosine similarity verification
 - Brute-force fallback when FAISS is unavailable
-- Persistent embedding updates for improved future matching
+- Persistent embedding updates for improved future recognition
 
 ---
 
-# Future Improvements
+## Future Improvements
 
 Potential extensions include:
 
-- Multi-camera re-identification
+- Multi-camera person re-identification
 - GPU-accelerated FAISS support
 - ByteTrack or DeepSORT integration
-- Face quality assessment before embedding extraction
-- Live RTSP camera support
+- Face quality assessment
+- Live RTSP/IP camera support
 - Automatic face gallery management
-- Export of appearance statistics
+- Identity analytics dashboard
 - REST API deployment
-- Docker support
-- PostgreSQL or SQLite backend for identity storage
+- Docker containerization
+- PostgreSQL or SQLite database integration
 
 ---
 
-# License
+## License
 
-This project is intended for academic and research purposes. Ensure compliance with local privacy regulations and organizational policies when processing CCTV footage containing identifiable individuals.
+This project is intended for academic and research purposes. Users are responsible for ensuring compliance with local privacy regulations and organizational policies when processing CCTV footage containing identifiable individuals.
